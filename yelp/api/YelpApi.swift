@@ -48,7 +48,8 @@ struct YelpResponse : Codable {
     let businesses: [Business]
 }
 
-struct Business: Codable {
+struct Business: Codable, Identifiable {
+    let id: String
     let alias: String
     let image_url: String
     let name: String
