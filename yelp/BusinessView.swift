@@ -20,7 +20,7 @@ struct BusinessView: View {
                 Label("Map Location", systemImage: "location.fill")
             }
             
-            BusinessReviewsView().tabItem {
+            BusinessReviewsView(businessId: businessId).tabItem {
                 Label("Reviews", systemImage: "message.fill")
             }
         }
