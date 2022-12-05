@@ -11,6 +11,7 @@ enum YelpError : Error {
     case RequestFailed
     case BusinessDeserialzationError
     case BusinessDetailDeserialzationError
+    case BusinessReviewsDeserialzationError
 }
 
 struct YelpApi {
@@ -63,6 +64,27 @@ struct YelpApi {
             throw YelpError.BusinessDetailDeserialzationError
         }
     }
+    
+    func fetchBusinessReviews(id: String) async throws -> [BusinessReviewResponse] {
+        let url = URL(string: BASE_URL + "/v1/businesses/\(id)/reviews")!
+        let request = URLRequest(url: url)
+        
+        let (data, response) = try await session.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            print("Couldn't fetch business reviews")
+            throw YelpError.RequestFailed
+        }
+        
+        let decoder = JSONDecoder()
+        
+        do {
+            let response = try decoder.decode([BusinessReviewResponse].self, from: data)
+            return response
+        } catch {
+            print("could not deserialize business reviews: \(error)")
+            throw YelpError.BusinessReviewsDeserialzationError
+        }
+    }
 }
 
 struct BusinessSearchResponse : Codable {
@@ -82,12 +104,24 @@ struct BusinessDetailResponse: Codable {
     let name: String
     let location: BusinessLocation
     let display_phone: String
-    let hours: [hour]
+    let hours: [hour]?
     let categories: [Category]
     let price: String
     let url: String
     let photos: [String]
     let coordinates: Coordinate
+}
+
+struct BusinessReviewResponse: Codable, Identifiable {
+    let user: User
+    let rating: Int
+    let text: String
+    let time_created: String
+    let id: String
+}
+
+struct User: Codable {
+    let name: String
 }
 
 struct Coordinate: Codable {
