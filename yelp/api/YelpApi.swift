@@ -91,8 +91,8 @@ struct BusinessDetailResponse: Codable {
 }
 
 struct Coordinate: Codable {
-    let latitude: String
-    let longitude: String
+    let latitude: Float
+    let longitude: Float
 }
 
 struct Category: Codable {
