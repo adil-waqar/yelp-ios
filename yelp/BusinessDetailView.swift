@@ -24,8 +24,12 @@ struct BusinessDetailView: View {
     
     private var isOpen: Bool {
         if let businessDetail = self.businessDetail {
-            if (businessDetail.hours[0].is_open_now) {
-                return true
+            if let hours = businessDetail.hours {
+                if (hours[0].is_open_now) {
+                    return true
+                } else {
+                    return false
+                }
             } else {
                 return false
             }
