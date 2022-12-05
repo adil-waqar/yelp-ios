@@ -16,7 +16,7 @@ struct BusinessView: View {
                 Label("Business Detail", systemImage: "text.bubble.fill")
             }
             
-            BusinessLocationView().tabItem {
+            BusinessLocationView(businessId: businessId).tabItem {
                 Label("Map Location", systemImage: "location.fill")
             }
             
