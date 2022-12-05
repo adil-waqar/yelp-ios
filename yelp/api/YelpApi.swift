@@ -87,6 +87,12 @@ struct BusinessDetailResponse: Codable {
     let price: String
     let url: String
     let photos: [String]
+    let coordinates: Coordinate
+}
+
+struct Coordinate: Codable {
+    let latitude: String
+    let longitude: String
 }
 
 struct Category: Codable {
