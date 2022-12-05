@@ -11,6 +11,10 @@
 		B1136ABC292C603300AD2DEE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1136ABB292C603300AD2DEE /* ContentView.swift */; };
 		B1136ABE292C603400AD2DEE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1136ABD292C603400AD2DEE /* Assets.xcassets */; };
 		B1136AC1292C603400AD2DEE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1136AC0292C603400AD2DEE /* Preview Assets.xcassets */; };
+		B1191BD2293D598500C15918 /* BusinessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1191BD1293D598500C15918 /* BusinessView.swift */; };
+		B1191BD4293D5B4A00C15918 /* BusinessDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1191BD3293D5B4A00C15918 /* BusinessDetailView.swift */; };
+		B1191BD6293D5B6900C15918 /* BusinessLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1191BD5293D5B6900C15918 /* BusinessLocationView.swift */; };
+		B1191BD8293D5B7B00C15918 /* BusinessReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1191BD7293D5B7B00C15918 /* BusinessReviewsView.swift */; };
 		B11ED7A2293C66FC00651134 /* BusinessSearchForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11ED7A1293C66FC00651134 /* BusinessSearchForm.swift */; };
 		B1694D5E2932C22800037BF1 /* GeoLocationApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1694D5D2932C22800037BF1 /* GeoLocationApi.swift */; };
 		B1694D622932E16600037BF1 /* YelpApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1694D612932E16600037BF1 /* YelpApi.swift */; };
@@ -23,6 +27,10 @@
 		B1136ABB292C603300AD2DEE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B1136ABD292C603400AD2DEE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1136AC0292C603400AD2DEE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		B1191BD1293D598500C15918 /* BusinessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessView.swift; sourceTree = "<group>"; };
+		B1191BD3293D5B4A00C15918 /* BusinessDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessDetailView.swift; sourceTree = "<group>"; };
+		B1191BD5293D5B6900C15918 /* BusinessLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessLocationView.swift; sourceTree = "<group>"; };
+		B1191BD7293D5B7B00C15918 /* BusinessReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessReviewsView.swift; sourceTree = "<group>"; };
 		B11ED7A1293C66FC00651134 /* BusinessSearchForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusinessSearchForm.swift; sourceTree = "<group>"; };
 		B1694D5D2932C22800037BF1 /* GeoLocationApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoLocationApi.swift; sourceTree = "<group>"; };
 		B1694D612932E16600037BF1 /* YelpApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YelpApi.swift; sourceTree = "<group>"; };
@@ -63,6 +71,10 @@
 				B1136AB9292C603300AD2DEE /* yelpApp.swift */,
 				B1136ABB292C603300AD2DEE /* ContentView.swift */,
 				B11ED7A1293C66FC00651134 /* BusinessSearchForm.swift */,
+				B1191BD1293D598500C15918 /* BusinessView.swift */,
+				B1191BD3293D5B4A00C15918 /* BusinessDetailView.swift */,
+				B1191BD5293D5B6900C15918 /* BusinessLocationView.swift */,
+				B1191BD7293D5B7B00C15918 /* BusinessReviewsView.swift */,
 				B1136ABD292C603400AD2DEE /* Assets.xcassets */,
 				B1136ABF292C603400AD2DEE /* Preview Content */,
 			);
@@ -157,10 +169,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1191BD2293D598500C15918 /* BusinessView.swift in Sources */,
 				B1694D622932E16600037BF1 /* YelpApi.swift in Sources */,
+				B1191BD8293D5B7B00C15918 /* BusinessReviewsView.swift in Sources */,
 				B11ED7A2293C66FC00651134 /* BusinessSearchForm.swift in Sources */,
 				B1694D64293339E700037BF1 /* IpInfoApi.swift in Sources */,
 				B1694D5E2932C22800037BF1 /* GeoLocationApi.swift in Sources */,
+				B1191BD4293D5B4A00C15918 /* BusinessDetailView.swift in Sources */,
+				B1191BD6293D5B6900C15918 /* BusinessLocationView.swift in Sources */,
 				B1136ABC292C603300AD2DEE /* ContentView.swift in Sources */,
 				B1136ABA292C603300AD2DEE /* yelpApp.swift in Sources */,
 			);

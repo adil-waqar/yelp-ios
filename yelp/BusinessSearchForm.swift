@@ -95,7 +95,7 @@ struct BusinessSearchForm: View {
                         .font(.title)
                         .fontWeight(.medium)
                     ForEach(businesses.indices, id: \.self) { index in
-                        NavigationLink(destination: Text("Second View")) {
+                        NavigationLink(destination: BusinessView(businessId: businesses[index].id)) {
                             HStack {
                                 Text(String(index + 1))
                                 Spacer()
@@ -143,8 +143,6 @@ struct BusinessSearchForm: View {
         let businesses = try await yelp.fetchBusinesses(term: keyword, radius: toMeters(miles: distance), categories: categories[category]!, latitude: lat, longitude: lng)
         
         self.businesses = businesses
-        
-        print("fetched businesses: \(self.businesses)")
     }
     
     func toMeters(miles: String) -> String {

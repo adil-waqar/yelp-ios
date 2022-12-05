@@ -40,7 +40,7 @@ struct GeoLocationApi {
             
             return (String(lat), String(lng))
         } catch {
-            print("could not deserialize geolocation")
+            print("could not deserialize geolocation: \(error)")
             throw GeoLocationError.GeoLocationDeserializationError
         }
     }

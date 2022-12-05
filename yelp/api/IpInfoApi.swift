@@ -35,7 +35,7 @@ struct IpInfoApi {
             let coordinates = response.loc.components(separatedBy: ",")
             return (coordinates[0], coordinates[1])
         } catch {
-            print("could not deserialize ip info response")
+            print("could not deserialize ip info response: \(error)")
             throw IpInfoError.IpInfoDeserializationError
         }
     }
