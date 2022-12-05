@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BusinessSearchForm: View {
     @State private var keyword = ""
-    @State private var distance = "0"
+    @State private var distance = "10"
     @State private var category = "Default"
     @State private var location = ""
     @State private var autoDetect = false
@@ -47,6 +47,7 @@ struct BusinessSearchForm: View {
                         }
                         .pickerStyle(.menu)
                         .foregroundColor(Color.gray)
+                        
                     }
                     if !autoDetect {
                         HStack {
@@ -68,14 +69,14 @@ struct BusinessSearchForm: View {
                         })
                         .padding(.vertical, 15.0)
                         .padding(.horizontal, 25.0)
-                        .background(!autoDetect ? Color.gray : Color.red)
+                        .background((autoDetect || self.location.count > 0) ? Color.red : Color.gray)
                         .foregroundColor(Color.white)
                         .cornerRadius(6)
                         .buttonStyle(BorderlessButtonStyle())
                     
                         Spacer()
                         Button("Clear", action: {
-                            print("clear")
+                            clear()
                         })
                         .padding(.vertical, 15.0)
                         .padding(.horizontal, 25.0)
@@ -143,6 +144,15 @@ struct BusinessSearchForm: View {
         let businesses = try await yelp.fetchBusinesses(term: keyword, radius: toMeters(miles: distance), categories: categories[category]!, latitude: lat, longitude: lng)
         
         self.businesses = businesses
+    }
+    
+    func clear() {
+        self.keyword = ""
+        self.distance = "10"
+        self.category = "Default"
+        self.location = ""
+        self.autoDetect = false
+        self.businesses = []
     }
     
     func toMeters(miles: String) -> String {
