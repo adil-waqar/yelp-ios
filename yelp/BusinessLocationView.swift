@@ -19,17 +19,26 @@ struct BusinessLocationView: View {
     
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.787789124691, longitude: -122.399305736113), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
-    let markers = [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 37.787789124691, longitude: -122.399305736113), tint: .red))]
+    var markers: [Marker] {
+        if let businessDetail = self.businessDetail {
+            let latitude = businessDetail.coordinates.latitude
+            let longitude = businessDetail.coordinates.longitude
+            
+            return [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), tint: .red))]
+        } else {
+            return [Marker(location: MapMarker(coordinate: CLLocationCoordinate2D(latitude: 37.787789124691, longitude: -122.399305736113), tint: .red))]
+        }
+    }
     
     var businessId: String
 
     var body: some View {
         VStack {
-            if let businessDetail = self.businessDetail {
+            if let _ = self.businessDetail {
                 Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: markers) { marker in
                             marker.location
                 }
-                .edgesIgnoringSafeArea(.all)
+                
             } else {
                 if (loading) {
                     ProgressView()
@@ -51,11 +60,8 @@ struct BusinessLocationView: View {
             
             let latitude = businessDetail.coordinates.latitude
             let longitude = businessDetail.coordinates.longitude
-            
-            print(latitude)
-            print(longitude)
-            
-            self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: Double(latitude)!, longitude: Double(longitude)!), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+
+            self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         } catch {
             print("an error occurred while fetching businessDetails. \(error)")
         }
