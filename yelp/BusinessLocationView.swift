@@ -56,12 +56,13 @@ struct BusinessLocationView: View {
             let yelp = YelpApi()
             self.loading = true
             let businessDetail = try await yelp.fetchBusinessDetails(id: businessId)
-            self.businessDetail = businessDetail
             
             let latitude = businessDetail.coordinates.latitude
             let longitude = businessDetail.coordinates.longitude
 
             self.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: CLLocationDegrees(latitude), longitude: CLLocationDegrees(longitude)), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            
+            self.businessDetail = businessDetail
         } catch {
             print("an error occurred while fetching businessDetails. \(error)")
         }
