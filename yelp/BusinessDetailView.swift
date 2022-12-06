@@ -12,6 +12,8 @@ struct BusinessDetailView: View {
     @State private var businessDetail: BusinessDetailResponse?
     @State private var error = false
     @State private var loading = false
+    @State private var isReservationOpen = false
+    @State private var isReservationCompleted = false
     
     private var facebookUrl: String {
         if let businessDetail = self.businessDetail {
@@ -22,6 +24,18 @@ struct BusinessDetailView: View {
         }
     }
     
+    private var unwrappedPrice: String {
+        if let businessDetail = self.businessDetail {
+            if let price = businessDetail.price {
+                return price
+            } else {
+                return "not available"
+            }
+        } else {
+            return ""
+        }
+    }
+
     private var isOpen: Bool {
         if let businessDetail = self.businessDetail {
             if let hours = businessDetail.hours {
@@ -92,7 +106,7 @@ struct BusinessDetailView: View {
                             .fontWeight(.semibold)
                             .multilineTextAlignment(.trailing)
                             .padding(.trailing)
-                        Text(businessDetail.price)
+                        Text(unwrappedPrice)
                             .multilineTextAlignment(.trailing)
                             .padding(.trailing)
                             .foregroundColor(Color.gray)
@@ -124,8 +138,11 @@ struct BusinessDetailView: View {
                 }
                 
                 Button("Reserve Now") {
-                    
+                    isReservationOpen.toggle()
                 }
+                .sheet(isPresented: $isReservationOpen, content: {
+                    ReservationFormView(isReservationOpen: $isReservationOpen, businessName: businessDetail.name, businessId: businessId)
+               })
                 .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
                 .background(Color.red)
                 .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
