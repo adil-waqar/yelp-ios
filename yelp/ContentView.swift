@@ -12,6 +12,16 @@ struct ContentView: View {
         NavigationView {
             BusinessSearchForm()
             .navigationTitle("Business Search")
+            .toolbar {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    NavigationLink {
+                        Text("Hey asshole")
+                    } label: {
+                        Image(systemName: "calendar.badge.clock").font(.title3)
+                    }
+
+                }
+            }
         }
     }
 }
