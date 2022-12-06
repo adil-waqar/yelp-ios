@@ -106,7 +106,7 @@ struct BusinessDetailResponse: Codable {
     let display_phone: String
     let hours: [hour]?
     let categories: [Category]
-    let price: String
+    let price: String?
     let url: String
     let photos: [String]
     let coordinates: Coordinate
