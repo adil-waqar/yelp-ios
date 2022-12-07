@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var showsAlwaysPopover = false
+
     var body: some View {
         NavigationView {
             BusinessSearchForm()
@@ -15,7 +17,7 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     NavigationLink {
-                        Text("Hey asshole")
+                        ReservationView()
                     } label: {
                         Image(systemName: "calendar.badge.clock").font(.title3)
                     }

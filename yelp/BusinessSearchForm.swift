@@ -13,8 +13,12 @@ struct BusinessSearchForm: View {
     @State private var category = "Default"
     @State private var location = ""
     @State private var autoDetect = false
-    
+    @State private var loading = false
+        
     @State private var businesses: [Business] = []
+    @State private var terms: [Term] = []
+    @State private var loadingAutocomplete = false
+    @FocusState private var keywordIsFocused: Bool
         
     private let categories = [
         "Default": "all",
@@ -32,6 +36,31 @@ struct BusinessSearchForm: View {
                         Text("Keyword: ")
                             .foregroundColor(Color.gray)
                         TextField("Required", text: $keyword)
+                            .onChange(of: keyword, perform: { _ in
+                                Task {
+                                    try await getAutocomplete()
+                                }
+                            })
+                            .focused($keywordIsFocused)
+                            .alwaysPopover(isPresented: .constant(keywordIsFocused)) {
+                                Section {
+                                    if (!self.loadingAutocomplete) {
+                                        ForEach(terms) { term in
+                                            Button {
+                                                print(term.text)
+                                                self.keyword = term.text
+                                            } label: {
+                                                Text(term.text)
+                                            }
+                                        }
+                                    } else {
+                                        ProgressView().progressViewStyle(.circular)
+                                    }
+                                }
+                                .buttonStyle(BorderlessButtonStyle())
+                                .foregroundColor(Color.gray)
+                                .padding(.all)
+                        }
                     }
                     HStack {
                         Text("Distance: ")
@@ -95,40 +124,55 @@ struct BusinessSearchForm: View {
                     Text("Results")
                         .font(.title)
                         .fontWeight(.medium)
-                    ForEach(businesses.indices, id: \.self) { index in
-                        NavigationLink(destination: BusinessView(businessId: businesses[index].id)) {
-                            HStack {
-                                Text(String(index + 1))
-                                Spacer()
-                                AsyncImage(url: URL(string: businesses[index].image_url)) { image in
-                                    image
-                                        .resizable()
-                                } placeholder: {
-                                    ProgressView()
-                                        .progressViewStyle(.circular)
-                                }
-                                .frame(width: 60, height: 60)
-                                .cornerRadius(5)
-                                Spacer()
-                                Text(businesses[index].name)
-                                    .frame(width: 100)
-                                    .foregroundColor(Color.gray)
-                                Spacer()
-                                Text(String(businesses[index].rating))
-                                    .fontWeight(.bold)
-                                Spacer()
-                                Text(String(toMiles(meters: businesses[index].distance))).fontWeight(.bold)
-                                }
+                    if (!loading) {
+                        ForEach(businesses.indices, id: \.self) { index in
+                            NavigationLink(destination: BusinessView(businessId: businesses[index].id)) {
+                                HStack {
+                                    Text(String(index + 1))
+                                    Spacer()
+                                    AsyncImage(url: URL(string: businesses[index].image_url)) { image in
+                                        image
+                                            .resizable()
+                                    } placeholder: {
+                                        ProgressView()
+                                            .progressViewStyle(.circular)
+                                    }
+                                    .frame(width: 60, height: 60)
+                                    .cornerRadius(5)
+                                    Spacer()
+                                    Text(businesses[index].name)
+                                        .frame(width: 100)
+                                        .foregroundColor(Color.gray)
+                                    Spacer()
+                                    Text(String(businesses[index].rating))
+                                        .fontWeight(.bold)
+                                    Spacer()
+                                    Text(String(toMiles(meters: businesses[index].distance))).fontWeight(.bold)
+                                    }
+                            }
                         }
+                    } else {
+                        ProgressView().progressViewStyle(.circular)
                     }
                 }
             }
         }
     }
     
+    func getAutocomplete() async throws {
+        self.loadingAutocomplete = true
+        let yelp = YelpApi()
+        print("self keyword")
+        print(self.keyword)
+        let encodedKeyword = self.keyword.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+        let terms = try await yelp.fetchAutocomplete(keyword: encodedKeyword)
+        self.terms = terms
+        self.loadingAutocomplete = false
+    }
+    
     func searchBusinesses() async throws {
+        self.loading = true
         var coordinates: (String, String)
-        
         if (autoDetect) {
             let ipInfo = IpInfoApi()
             coordinates = try await ipInfo.detectGeoLocation()
@@ -144,6 +188,7 @@ struct BusinessSearchForm: View {
         let businesses = try await yelp.fetchBusinesses(term: keyword, radius: toMeters(miles: distance), categories: categories[category]!, latitude: lat, longitude: lng)
         
         self.businesses = businesses
+        self.loading = false
     }
     
     func clear() {

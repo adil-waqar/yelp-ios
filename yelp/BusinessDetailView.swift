@@ -8,16 +8,47 @@
 import SwiftUI
 
 struct BusinessDetailView: View {
+    @AppStorage("reservations") var reservations = Data.init()
 
     @State private var businessDetail: BusinessDetailResponse?
     @State private var error = false
     @State private var loading = false
     @State private var isReservationOpen = false
-    @State private var isReservationCompleted = false
+    
+    var businessId: String;
+    
+    private var isReserved: Bool {
+        if (reservations.isEmpty) {
+            return false
+        }
+        
+        do {
+            let reservations = try JSONDecoder().decode([Reservation].self, from: reservations)
+            for reservation in reservations {
+                if reservation.businessId == businessId {
+                    return true
+                }
+            }
+            return false
+        } catch {
+            print("could not deserialize reservation in isReserved")
+            return false
+        }
+    }
+    
+    private var twitterUrl: String {
+        if let businessDetail = self.businessDetail {
+            let businessNameEncoded = businessDetail.name.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
+            let url: String = "https://twitter.com/intent/tweet?text=Check+\(businessNameEncoded)+\(businessDetail.url)"
+            return url
+        } else {
+            return ""
+        }
+    }
     
     private var facebookUrl: String {
         if let businessDetail = self.businessDetail {
-            let url: String = "https://twitter.com/intent/tweet?text=Check%20\(businessDetail.name)%20\(businessDetail.url)"
+            let url: String = "https://www.facebook.com/sharer/sharer.php?u=\(businessDetail.url)&amp;src=sdkpreparse"
             return url
         } else {
             return ""
@@ -51,9 +82,7 @@ struct BusinessDetailView: View {
             return false
         }
     }
-    
-    var businessId: String;
-    
+        
     var body: some View {
         VStack (spacing: 15) {
             if let businessDetail = self.businessDetail {
@@ -137,28 +166,38 @@ struct BusinessDetailView: View {
                     }
                 }
                 
-                Button("Reserve Now") {
-                    isReservationOpen.toggle()
+                if (!isReserved) {
+                    Button("Reserve Now") {
+                        isReservationOpen.toggle()
+                    }
+                    .sheet(isPresented: $isReservationOpen, content: {
+                        ReservationFormView(isReservationOpen: $isReservationOpen, businessName: businessDetail.name, businessId: businessId)
+                   })
+                    .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+                    .background(Color.red)
+                    .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
+                    .cornerRadius(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
+                } else {
+                    Button("Cancel Reservation") {
+                        cancelReservation()
+                    }
+                    .padding(.all)
+                    .background(Color.blue)
+                    .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
+                    .cornerRadius(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
                 }
-                .sheet(isPresented: $isReservationOpen, content: {
-                    ReservationFormView(isReservationOpen: $isReservationOpen, businessName: businessDetail.name, businessId: businessId)
-               })
-                .padding(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-                .background(Color.red)
-                .foregroundColor(/*@START_MENU_TOKEN@*/.white/*@END_MENU_TOKEN@*/)
-                .cornerRadius(/*@START_MENU_TOKEN@*/10.0/*@END_MENU_TOKEN@*/)
                 
                 HStack {
                     Text("Share on: ")
                         .fontWeight(.medium)
-                    Link(destination: URL(string: "hey")!) {
+                    Link(destination: URL(string: facebookUrl)!) {
                         Image("facebook")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
                         
                     }
-                    Link(destination: URL(string: "hey")!) {
+                    Link(destination: URL(string: twitterUrl)!) {
                         Image("twitter")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -202,6 +241,21 @@ struct BusinessDetailView: View {
         }
         
         self.loading = false
+    }
+    
+    func cancelReservation() {
+        do {
+            let reservations = try JSONDecoder().decode([Reservation].self, from: reservations)
+            let filteredReservation = reservations.filter { reservation in
+                return reservation.businessId != businessId
+            }
+            
+            if let encoded = try? JSONEncoder().encode(filteredReservation) {
+                self.reservations = encoded
+            }
+        } catch {
+            print("could not deserialize reservation in isReserved")
+        }
     }
 }
 

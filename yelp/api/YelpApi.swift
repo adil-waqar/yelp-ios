@@ -12,6 +12,7 @@ enum YelpError : Error {
     case BusinessDeserialzationError
     case BusinessDetailDeserialzationError
     case BusinessReviewsDeserialzationError
+    case BusinessAutocompleteDeserializationError
 }
 
 struct YelpApi {
@@ -84,6 +85,38 @@ struct YelpApi {
             print("could not deserialize business reviews: \(error)")
             throw YelpError.BusinessReviewsDeserialzationError
         }
+    }
+    
+    func fetchAutocomplete(keyword: String) async throws -> [Term] {
+        print("hre")
+        print(keyword)
+        let url = URL(string: BASE_URL + "/v1/auto/\(keyword)")!
+        let request = URLRequest(url: url)
+        
+        let (data, response) = try await session.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else {
+            print("Couldn't fetch autocomplete keywords")
+            throw YelpError.RequestFailed
+        }
+        
+        let decoder = JSONDecoder()
+        
+        do {
+            let terms = try decoder.decode([Term].self, from: data)
+            return terms
+        } catch {
+            print("could not deserialize autcomplete terms: \(error)")
+            throw YelpError.BusinessReviewsDeserialzationError
+        }
+    }
+}
+
+struct Term: Codable, Identifiable {
+    let text: String
+    let id = UUID()
+    
+    private enum CodingKeys: String, CodingKey {
+            case text
     }
 }
 

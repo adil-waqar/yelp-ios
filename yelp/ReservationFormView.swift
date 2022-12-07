@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Reservation: Codable {
+struct Reservation: Codable, Identifiable {
     let businessId: String
     let businessName: String
     let date: Date
@@ -16,15 +16,21 @@ struct Reservation: Codable {
     let email: String
 }
 
+extension Reservation {
+    var id: String {
+        return businessId
+    }
+}
+
 struct ReservationFormView: View {
-    @AppStorage("reservations") var reservations: Data = Data.init()
+    @AppStorage(wrappedValue: Data.init(), "reservations") var reservations: Data
     
     @State private var email: String = ""
     @State private var date = Date.now
     @State private var hour = "10"
     @State private var minute = "00"
     @State private var showAlert = false
-    @State var isReservationCompleted: Bool = false
+    @State private var isReservationCompleted: Bool = false
     
     let hours = ["10", "11", "12", "13", "14", "15", "16", "17"]
     let minutes = ["00", "15", "30", "45"]
@@ -90,6 +96,7 @@ struct ReservationFormView: View {
                         Spacer()
                         Button("Submit", action: {
                             if (isValidEmailAddr(email: email)) {
+                                isReservationCompleted = true
                                 storeReservation()
                                 close()
                             } else {
@@ -121,7 +128,7 @@ struct ReservationFormView: View {
                     Divider()
                     Spacer()
                     Button("Done", action: {
-                        isReservationOpen = false
+                         isReservationOpen = false
                     })
                     .padding(.vertical, 15.0)
                     .padding(.horizontal, 80.0)
@@ -143,9 +150,9 @@ struct ReservationFormView: View {
                                       minute: minute,
                                       email: email)
         
-        if (reservations.isEmpty) {
+        if (self.reservations.isEmpty) {
             if let encoded = try? JSONEncoder().encode([reservation]) {
-                reservations = encoded
+                self.reservations = encoded
             }
         } else {
             do {
@@ -153,19 +160,19 @@ struct ReservationFormView: View {
                 storedReservations.append(reservation)
                 
                 if let encoded = try? JSONEncoder().encode(storedReservations) {
-                    reservations = encoded
+                    self.reservations = encoded
                 }
             } catch {
                 print("could not deserialize reservations: \(error)")
             }
         }
         
-        isReservationCompleted = true
+        self.isReservationCompleted = true
     }
     
     func close() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isReservationOpen = false
+            self.isReservationOpen = false
         }
     }
     
