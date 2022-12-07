@@ -98,7 +98,6 @@ struct ReservationFormView: View {
                             if (isValidEmailAddr(email: email)) {
                                 isReservationCompleted = true
                                 storeReservation()
-                                close()
                             } else {
                                 showAlert = true
                             }
@@ -152,7 +151,9 @@ struct ReservationFormView: View {
         
         if (self.reservations.isEmpty) {
             if let encoded = try? JSONEncoder().encode([reservation]) {
-                self.reservations = encoded
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.reservations = encoded
+                }
             }
         } else {
             do {
@@ -160,7 +161,9 @@ struct ReservationFormView: View {
                 storedReservations.append(reservation)
                 
                 if let encoded = try? JSONEncoder().encode(storedReservations) {
-                    self.reservations = encoded
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.reservations = encoded
+                    }
                 }
             } catch {
                 print("could not deserialize reservations: \(error)")
@@ -168,12 +171,6 @@ struct ReservationFormView: View {
         }
         
         self.isReservationCompleted = true
-    }
-    
-    func close() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.isReservationOpen = false
-        }
     }
     
     func isValidEmailAddr(email: String) -> Bool {
