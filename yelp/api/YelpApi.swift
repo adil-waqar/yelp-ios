@@ -16,7 +16,7 @@ enum YelpError : Error {
 }
 
 struct YelpApi {
-    private let BASE_URL = "http://localhost:8080"
+    private let BASE_URL = "https://yelp-node.uw.r.appspot.com"
     private var session = URLSession.shared
     
     func fetchBusinesses(term: String, radius: String, categories: String, latitude: String, longitude: String) async throws -> [Business] {
