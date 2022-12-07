@@ -162,8 +162,6 @@ struct BusinessSearchForm: View {
     func getAutocomplete() async throws {
         self.loadingAutocomplete = true
         let yelp = YelpApi()
-        print("self keyword")
-        print(self.keyword)
         let encodedKeyword = self.keyword.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
         let terms = try await yelp.fetchAutocomplete(keyword: encodedKeyword)
         self.terms = terms

@@ -88,8 +88,6 @@ struct YelpApi {
     }
     
     func fetchAutocomplete(keyword: String) async throws -> [Term] {
-        print("hre")
-        print(keyword)
         let url = URL(string: BASE_URL + "/v1/auto/\(keyword)")!
         let request = URLRequest(url: url)
         
