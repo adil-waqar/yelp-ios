@@ -124,7 +124,7 @@ struct BusinessSearchForm: View {
                     Text("Results")
                         .font(.title)
                         .fontWeight(.medium)
-                    if (!loading) {
+                    if (!self.loading) {
                         ForEach(businesses.indices, id: \.self) { index in
                             NavigationLink(destination: BusinessView(businessId: businesses[index].id)) {
                                 HStack {
